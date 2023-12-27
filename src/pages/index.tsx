@@ -1,20 +1,20 @@
-import React, {useState} from "react";
-import {useQuery} from "react-query";
-import {getUserPage} from "../api/getUserPage";
+import React from "react";
 import styled from "@emotion/styled";
+import {Search} from "../components";
+import {TableComponent} from "../components";
 
 export const MainPage: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const {data, isLoading, isError} = useQuery(["users", currentPage], () => getUserPage(currentPage));
 
-  console.log(data, isLoading, isError);
-  const handlerPage = (page:number)=>{
-    setCurrentPage(page)
-  }
   return (
     <Container>
       <CompanyName>Моя организация</CompanyName>
-      <TableContainer>Пользователи</TableContainer>
+      <TableContainer>
+        <NameTable>
+          Пользователи
+        </NameTable>
+        <Search/>
+        <TableComponent/>
+      </TableContainer>
     </Container>
   );
 };
@@ -29,7 +29,7 @@ const Container = styled.div`
   margin-top: 35px;
   box-sizing: border-box;
   width: 100%;
-`
+`;
 
 const CompanyName = styled.h2`
   display: flex;
@@ -43,13 +43,18 @@ const CompanyName = styled.h2`
   font-size: 22px;
   line-height: 29px;
   border-bottom: 1px solid #222B44;
-`
+`;
 
 const TableContainer = styled.div`
   width: 100%;
   box-sizing: border-box;
-  margin: 34px 0 34px 34px;
+  padding: 34px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const NameTable = styled.span`
   font-weight: 600;
   font-size: 22px;
   line-height: 29px;
-`
+`;
