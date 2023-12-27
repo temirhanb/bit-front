@@ -2,7 +2,7 @@ import React from "react";
 import PersonIcon from "@mui/icons-material/Person";
 
 import {
-  ButtonAuth,
+  ButtonAuth, ButtonAuthInfo,
   ButtonAuthRole,
   ButtonAuthStatus,
   Container,
@@ -25,8 +25,10 @@ export const Header: React.FC = () => {
         <ImageBackground>
           <PersonIcon/>
         </ImageBackground>
-        <ButtonAuthStatus>Вы авторизованны</ButtonAuthStatus>
-        <ButtonAuthRole>Администратор</ButtonAuthRole>
+        <ButtonAuthInfo>
+          <ButtonAuthStatus>Вы авторизованны</ButtonAuthStatus>
+          <ButtonAuthRole>Администратор</ButtonAuthRole>
+        </ButtonAuthInfo>
       </ButtonAuth>
     </Container>
   );

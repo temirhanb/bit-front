@@ -31,6 +31,7 @@ export const ImageBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 14px;
 `;
 
 export const ButtonAuthInfo = styled.div`
