@@ -2,6 +2,7 @@ import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {MainPage} from "../pages";
 import {ErrorPage} from "../pages/error-page";
+import {Header} from "../components";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +16,7 @@ export const App: React.FC = () => {
 
   return (
     <>
-      <h1>any content</h1>
+      <Header/>
       <RouterProvider router={router}/>
     </>
   );
