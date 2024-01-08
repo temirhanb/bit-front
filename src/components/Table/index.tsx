@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import styled from "@emotion/styled";
 import Table from "@mui/material/Table";
@@ -28,15 +28,27 @@ export const TableComponent: React.FC<IProps> = ({users, sort, handlerSort}) => 
     "Действия",
   ];
 
-  const handlerClick = (id)=>{
-    getUserTransaction(id)
-  }
+  const [open, setOpen] = React.useState(false);
+
+  const [transaction,setTransaction] = useState([])
+  const [email,setEmail] = useState('')
+
+  const toggleDrawer = () => setOpen(!open);
+  console.log(open);
+  const handlerClick = (id,email) => {
+    getUserTransaction(id).then((res) => {
+      setTransaction(res)
+    });
+    toggleDrawer();
+    setEmail(email)
+  };
+
+
 
   return (
 
     <Container>
-      <DrawerComponent/>
-
+      <DrawerComponent email={email} transaction={transaction} open={open} toggleDrawer={toggleDrawer}/>
       <Table>
         <TableHead>
           <TableRow>
@@ -56,7 +68,7 @@ export const TableComponent: React.FC<IProps> = ({users, sort, handlerSort}) => 
         </TableHead>
         <TableBody>
           {users.map(({id, email, name, role, subscription}) => (
-            <BodyRow key={id} onClick={()=>handlerClick(id)}>
+            <BodyRow key={id} onClick={() => handlerClick(id,email)}>
               <BodyCell align={"center"}>
                 {email}
               </BodyCell>
@@ -70,7 +82,7 @@ export const TableComponent: React.FC<IProps> = ({users, sort, handlerSort}) => 
                 {subscription.plan.type}
               </BodyCell>
               <BodyCell align={"center"}>
-                {subscription.tokens}
+                {subscription.tokens} BTKN
               </BodyCell>
               <BodyCell align={"center"}>
                 <ButtonContainer>

@@ -1,89 +1,90 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import styled from "@emotion/styled";
 
-type Anchor = "top" | "left" | "bottom" | "right";
+interface IProps {
+  open: boolean;
+  email: string;
+  toggleDrawer: () => void;
+  transaction: any;
+}
 
-export const DrawerComponent = () => {
-  const [state, setState] = React.useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  });
+export const DrawerComponent: React.FC<IProps> = ({email, transaction, open, toggleDrawer}) => {
 
-  const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
-      (event: React.KeyboardEvent | React.MouseEvent) => {
-        if (
-          event.type === "keydown" &&
-          ((event as React.KeyboardEvent).key === "Tab" ||
-            (event as React.KeyboardEvent).key === "Shift")
-        ) {
-          return;
-        }
-
-        setState({...state, [anchor]: open});
-      };
-
-  const list = (anchor: Anchor) => (
-    <Box
-      sx={{width: anchor === "top" || anchor === "bottom" ? "auto" : 250}}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
+  const list = () => (
+    <Container
+      onClick={toggleDrawer}
+      onKeyDown={toggleDrawer}
     >
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
-              </ListItemIcon>
-              <ListItemText primary={text}/>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider/>
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
-              </ListItemIcon>
-              <ListItemText primary={text}/>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+      <Header>
+        <h1>
+          {email}
+        </h1>
+      </Header>
+      <Header>
+        <h1>
+          Исользование токенов
+        </h1>
+      </Header>
+      <div style={{
+        display: "flex",
+        flexDirection: "column"
+      }}>
+
+      </div>
+      <Header>
+        <h1>
+          История операций
+        </h1>
+      </Header>
+      <div>
+        {transaction.map(({amount, type, id, created_at}) => {
+
+          return (
+            <div key={id}>
+              <span>{type === "WRITE_OFF" ? "Списание" : "Пополнение"}</span>
+              <span>{amount} BTKN</span>
+              <span>{created_at}</span>
+            </div>);
+        })}
+
+      </div>
+
+    </Container>
   );
 
   return (
-    <div>
-      {(["left", "right", "top", "bottom"] as const).map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
-          <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
-            {list(anchor)}
-          </Drawer>
-        </React.Fragment>
-      ))}
-    </div>
+    <>
+      <Drawer
+        anchor={"right"}
+        open={open}
+        onClose={toggleDrawer}
+      >
+        {list()}
+      </Drawer>
+    </>
   );
 };
+
+const Container = styled.div`
+  width: 470px;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: #121825;
+
+`;
+const Header = styled.div`
+  margin-top: 24px;
+  margin-left: 24px;
+
+  h1 {
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 600;
+    color: #fff;
+  }
+`;
+
+const UseTokens = styled.div`
+
+`;

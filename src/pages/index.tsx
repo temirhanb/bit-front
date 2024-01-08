@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import styled from "@emotion/styled";
-import {DrawerComponent, PaginationPage, Search, TableComponent} from "../components";
+import {PaginationPage, Search, TableComponent} from "../components";
 import {getUserPage} from "../api/getUserPage";
 
 export const MainPage: React.FC = () => {
