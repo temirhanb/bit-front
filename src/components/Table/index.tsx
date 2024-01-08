@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 
 import styled from "@emotion/styled";
 import Table from "@mui/material/Table";
@@ -6,16 +6,18 @@ import TableBody from "@mui/material/TableBody";
 
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import {useQuery} from "react-query";
-import {getUserPage} from "../../api/getUserPage";
-import {TableCell} from "@mui/material";
+import {Button, TableCell, TableSortLabel} from "@mui/material";
+import {DeleteIcon, EditIcon, SortIcon} from "../../assets/icons";
+import {getUserTransaction} from "../../api/getUserTransaction";
+import {DrawerComponent} from "../Drawer";
 
-export const TableComponent: React.FC = () => {
+interface IProps {
+  users: any;
+  sort: string;
+  handlerSort: (item: string) => void;
+}
 
-  const [currentPage] = useState(1);
-  const {data, isLoading, isError} = useQuery(["users", currentPage], () => getUserPage(currentPage));
-
-  console.log(data, isLoading, isError);
+export const TableComponent: React.FC<IProps> = ({users, sort, handlerSort}) => {
 
   const names: Array<string> = [
     "Email",
@@ -25,18 +27,36 @@ export const TableComponent: React.FC = () => {
     "Токены",
     "Действия",
   ];
-  if (isLoading) return <div>loading...</div>;
+
+  const handlerClick = (id)=>{
+    getUserTransaction(id)
+  }
+
   return (
+
     <Container>
+      <DrawerComponent/>
+
       <Table>
         <TableHead>
           <TableRow>
-            {names.map((item, index) => (<HeaderCell align={"center"} key={item + index}>{item}</HeaderCell>))}
+            {names.map((item, index) => (<HeaderCell align={"center"} key={item + index}>
+              {item === "Токены" ? (
+                <TableSortLabelStyle
+                  active={item === "Токены"}
+                  sort={sort}
+                  onClick={handlerSort}
+                  IconComponent={() => <SortIcon/>}
+                >
+                  {item}
+                </TableSortLabelStyle>
+              ) : item}
+            </HeaderCell>))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.data.map(({id, email, name, role, subscription}) => (
-            <BodyRow key={id}>
+          {users.map(({id, email, name, role, subscription}) => (
+            <BodyRow key={id} onClick={()=>handlerClick(id)}>
               <BodyCell align={"center"}>
                 {email}
               </BodyCell>
@@ -53,9 +73,14 @@ export const TableComponent: React.FC = () => {
                 {subscription.tokens}
               </BodyCell>
               <BodyCell align={"center"}>
-                <button>E</button>
-                \
-                <button>D</button>
+                <ButtonContainer>
+                  <StyleButton>
+                    <EditIcon/>
+                  </StyleButton>
+                  <StyleButton>
+                    <DeleteIcon/>
+                  </StyleButton>
+                </ButtonContainer>
               </BodyCell>
             </BodyRow>
           ))}
@@ -85,9 +110,27 @@ const HeaderCell = styled(TableCell)`
   }
 `;
 
+interface ISortLabel {
+  sort: string;
+}
+
+const TableSortLabelStyle = styled(TableSortLabel)<ISortLabel>`
+  color: #9CA3AF !important;
+
+  span {
+    color: #9CA3AF;
+
+  }
+
+  svg {
+    ${({sort}) => (sort === "asc" ? "" : "transform: rotate(180deg);")}
+  }
+`;
+
 const BodyRow = styled(TableRow)`
   border-bottom: 1px solid #222B44;
-  :hover{
+
+  :hover {
     opacity: .1;
     cursor: pointer;
   }
@@ -101,5 +144,17 @@ const BodyCell = styled(TableCell)`
   border: none;
   padding: 0;
   height: 64px;
+`;
 
+const ButtonContainer = styled.div`
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const StyleButton = styled(Button)`
+  padding: 0;
+  margin: 0 10px 0 0;
+  display: flex;
+  min-width: 20px;
 `;

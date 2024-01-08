@@ -1,13 +1,37 @@
-import React from "react";
+import React, {useDeferredValue, useEffect, useState} from "react";
 import {InputAdornment, TextField} from "@mui/material";
 import styled from "@emotion/styled";
+import {getUserSearch} from "../../api/getUserSearch";
 
-export const Search: React.FC = () => {
+interface IProps {
+  setUsers: (items: []) => void;
+  setPages: (pages: number) => void;
+}
+
+export const Search: React.FC<IProps> = ({setUsers, setPages}) => {
+  const [value, setValue] = useState("");
+
+  const deferredValue = useDeferredValue(value);
+
+  useEffect(() => {
+
+    getUserSearch(deferredValue, 1).then((res) => {
+      setUsers(res.data);
+      setPages(res.pages);
+    });
+
+  }, [deferredValue]);
+
+  const handlerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
   return (
     <Container>
       <InputField
-        id="input-with-icon-textfield"
+        id="input-with-icon-text-field"
         placeholder="Поиск"
+        onChange={handlerChange}
+        value={value}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

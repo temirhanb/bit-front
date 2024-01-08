@@ -1,9 +1,48 @@
-import React from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import styled from "@emotion/styled";
-import {Search} from "../components";
-import {TableComponent} from "../components";
+import {DrawerComponent, PaginationPage, Search, TableComponent} from "../components";
+import {getUserPage} from "../api/getUserPage";
 
 export const MainPage: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [sort, setSort] = useState<string>("asc");
+
+  const handlerSort = () => {
+    if (sort === "asc") return setSort("desc");
+    return setSort("asc");
+  };
+
+  const [users, setUsers] = useState([]);
+  const [pages, setPages] = useState(0);
+
+  const handlerCurrentPage = (event: React.ChangeEvent<unknown>, value: number) => {
+    event.preventDefault();
+    setCurrentPage(value);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getUserPage(currentPage, sort).then((res) => {
+      setUsers(res.data);
+      setPages(res.pages);
+    }).finally(() => setIsLoading(false));
+    return (() => {
+      setIsLoading(true);
+    });
+  }, []);
+
+  useMemo(() => {
+    setIsLoading(true);
+    getUserPage(currentPage, sort).then((res) => {
+      setUsers(res.data);
+      setPages(res.pages);
+    }).finally(() => setIsLoading(false));
+    return (() => {
+      setIsLoading(true);
+    });
+  }, [currentPage, sort]);
 
   return (
     <Container>
@@ -12,9 +51,22 @@ export const MainPage: React.FC = () => {
         <NameTable>
           Пользователи
         </NameTable>
-        <Search/>
-        <TableComponent/>
+        <Search
+          setUsers={setUsers}
+          setPages={setPages}
+        />
+        {
+          isLoading ? <div>loading...</div> :
+            <TableComponent
+              users={users}
+              sort={sort}
+              handlerSort={handlerSort}
+            />
+        }
       </TableContainer>
+      {!isLoading && (
+        <PaginationPage currentPage={currentPage} handlerCurrentPage={handlerCurrentPage} pages={pages}/>
+      )}
     </Container>
   );
 };
@@ -25,8 +77,8 @@ const Container = styled.div`
   flex-direction: column;
   border-radius: 17px;
   background: #121825;
-  height: 100%;
   margin-top: 35px;
+  padding-bottom: 35px;
   box-sizing: border-box;
   width: 100%;
 `;
