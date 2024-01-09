@@ -3,6 +3,7 @@ import Drawer from "@mui/material/Drawer";
 import styled from "@emotion/styled";
 import {TokenTable} from "../TokenTable";
 import {ITransactions} from "../types/transactions";
+import {Chart} from "../Chart";
 
 interface IProps {
   open: boolean;
@@ -32,7 +33,7 @@ export const DrawerComponent: React.FC<IProps> = ({email, transaction, open, tog
         display: "flex",
         flexDirection: "column"
       }}>
-
+        <Chart transaction={transaction}/>
       </div>
       <Header>
         <h1>
@@ -42,7 +43,6 @@ export const DrawerComponent: React.FC<IProps> = ({email, transaction, open, tog
       <div>
         <TokenTable transaction={transaction}/>
       </div>
-
     </Container>
   );
 
