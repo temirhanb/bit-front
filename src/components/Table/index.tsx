@@ -10,11 +10,13 @@ import {Button, TableCell, TableSortLabel} from "@mui/material";
 import {DeleteIcon, EditIcon, SortIcon} from "../../assets/icons";
 import {getUserTransaction} from "../../api/getUserTransaction";
 import {DrawerComponent} from "../Drawer";
+import {IUser} from "../types/users";
+import {ITransactions} from "../types/transactions";
 
 interface IProps {
-  users: any;
+  users: IUser[];
   sort: string;
-  handlerSort: (item: string) => void;
+  handlerSort: () => void;
 }
 
 export const TableComponent: React.FC<IProps> = ({users, sort, handlerSort}) => {
@@ -30,20 +32,18 @@ export const TableComponent: React.FC<IProps> = ({users, sort, handlerSort}) => 
 
   const [open, setOpen] = React.useState(false);
 
-  const [transaction,setTransaction] = useState([])
-  const [email,setEmail] = useState('')
+  const [transaction, setTransaction] = useState([] as ITransactions[]);
+  const [email, setEmail] = useState("");
 
   const toggleDrawer = () => setOpen(!open);
-  console.log(open);
-  const handlerClick = (id,email) => {
+
+  const handlerClick = (id: string, email: string) => {
     getUserTransaction(id).then((res) => {
-      setTransaction(res)
+      setTransaction(res);
     });
     toggleDrawer();
-    setEmail(email)
+    setEmail(email);
   };
-
-
 
   return (
 
@@ -68,7 +68,7 @@ export const TableComponent: React.FC<IProps> = ({users, sort, handlerSort}) => 
         </TableHead>
         <TableBody>
           {users.map(({id, email, name, role, subscription}) => (
-            <BodyRow key={id} onClick={() => handlerClick(id,email)}>
+            <BodyRow key={id} onClick={() => handlerClick(id, email)}>
               <BodyCell align={"center"}>
                 {email}
               </BodyCell>

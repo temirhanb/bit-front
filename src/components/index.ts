@@ -3,3 +3,4 @@ export * from "./Search";
 export * from "./Table";
 export * from "./Pagination";
 export * from "./Drawer";
+export * from "./TokenTable";

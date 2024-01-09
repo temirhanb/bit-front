@@ -1,12 +1,14 @@
 import * as React from "react";
 import Drawer from "@mui/material/Drawer";
 import styled from "@emotion/styled";
+import {TokenTable} from "../TokenTable";
+import {ITransactions} from "../types/transactions";
 
 interface IProps {
   open: boolean;
   email: string;
   toggleDrawer: () => void;
-  transaction: any;
+  transaction: ITransactions[];
 }
 
 export const DrawerComponent: React.FC<IProps> = ({email, transaction, open, toggleDrawer}) => {
@@ -38,16 +40,7 @@ export const DrawerComponent: React.FC<IProps> = ({email, transaction, open, tog
         </h1>
       </Header>
       <div>
-        {transaction.map(({amount, type, id, created_at}) => {
-
-          return (
-            <div key={id}>
-              <span>{type === "WRITE_OFF" ? "Списание" : "Пополнение"}</span>
-              <span>{amount} BTKN</span>
-              <span>{created_at}</span>
-            </div>);
-        })}
-
+        <TokenTable transaction={transaction}/>
       </div>
 
     </Container>
@@ -81,10 +74,7 @@ const Header = styled.div`
     font-size: 20px;
     line-height: 26px;
     font-weight: 600;
+    margin: 0;
     color: #fff;
   }
-`;
-
-const UseTokens = styled.div`
-
 `;
