@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import {TokenTable} from "../TokenTable";
 import {ITransactions} from "../types/transactions";
 import {Chart} from "../Chart";
+import {TitleDrawer} from "./component/TitleDrawer";
 
 interface IProps {
   open: boolean;
@@ -19,27 +20,10 @@ export const DrawerComponent: React.FC<IProps> = ({email, transaction, open, tog
       onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
     >
-      <Header>
-        <h1>
-          {email}
-        </h1>
-      </Header>
-      <Header>
-        <h1>
-          Исользование токенов
-        </h1>
-      </Header>
-      <div style={{
-        display: "flex",
-        flexDirection: "column"
-      }}>
-        <Chart transaction={transaction}/>
-      </div>
-      <Header>
-        <h1>
-          История операций
-        </h1>
-      </Header>
+      <TitleDrawer title={email}/>
+      <TitleDrawer title={'Исользование токенов'}/>
+      <Chart transaction={transaction} email={email}/>
+      <TitleDrawer title={'История операций'}/>
       <div>
         <TokenTable transaction={transaction}/>
       </div>
@@ -65,16 +49,4 @@ const Container = styled.div`
   overflow-y: scroll;
   background-color: #121825;
 
-`;
-const Header = styled.div`
-  margin-top: 24px;
-  margin-left: 24px;
-
-  h1 {
-    font-size: 20px;
-    line-height: 26px;
-    font-weight: 600;
-    margin: 0;
-    color: #fff;
-  }
 `;
